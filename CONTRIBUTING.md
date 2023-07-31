@@ -1,4 +1,4 @@
-# Contribute
+# Contributing
 
 If you want to contribute to the project here are your options. 
 I appreciate each and every bug report, feature request or merge request.

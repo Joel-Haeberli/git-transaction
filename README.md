@@ -56,4 +56,4 @@ which is not what we're looking for I think)
 # contribute
 
 You want to contribute? I'm grateful for every contribution wether it is an issue, bug or even
-a merge request. Please take a look at [CONTRIBUTION.md](./CONTRIBUTION.md) for further information.
+a merge request. Please take a look at [CONTRIBUTING.md](./CONTRIBUTING.md) for further information.
