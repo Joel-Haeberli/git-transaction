@@ -18,6 +18,12 @@ const testTokenEmail = ""
 const testToken = ""
 const testRepoUrl = ""
 
+var token = &gittransaction.Token{
+	testTokenName,
+	testToken,
+	testTokenEmail,
+}
+
 const testFileContent = "this is some test content"
 
 var testFilePath = filepath.Join(testPath, "testfile-"+uuid.NewString()+".txt")
@@ -26,7 +32,7 @@ func TestWrite(t *testing.T) {
 
 	cloneRepoTo(testRepoUrl, "", "", testPath)
 
-	ctx, transaction, err := gittransaction.New(gittransaction.SINGLEBRANCH, testPath, testTokenName, testToken, testTokenEmail)
+	ctx, transaction, err := gittransaction.New(gittransaction.SINGLEBRANCH, testPath, token)
 	printAndFailNowOnError(err, t)
 
 	transaction2 := gittransaction.FindTransaction(ctx)
@@ -48,7 +54,7 @@ func TestCommit(t *testing.T) {
 
 	cloneRepoTo(testRepoUrl, "", "", testPath)
 
-	ctx, transaction, err := gittransaction.New(gittransaction.SINGLEBRANCH, testPath, testTokenName, testToken, testTokenEmail)
+	ctx, transaction, err := gittransaction.New(gittransaction.SINGLEBRANCH, testPath, token)
 	printAndFailNowOnError(err, t)
 
 	transaction2 := gittransaction.FindTransaction(ctx)
@@ -73,7 +79,7 @@ func TestRollback(t *testing.T) {
 
 	cloneRepoTo(testRepoUrl, "", "", testPath)
 
-	ctx, transaction, err := gittransaction.New(gittransaction.SINGLEBRANCH, testPath, testTokenName, testToken, testTokenEmail)
+	ctx, transaction, err := gittransaction.New(gittransaction.SINGLEBRANCH, testPath, token)
 	printAndFailNowOnError(err, t)
 
 	transaction2 := gittransaction.FindTransaction(ctx)

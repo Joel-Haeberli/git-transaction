@@ -18,7 +18,7 @@ type SinglebranchTransaction struct {
 }
 
 // Write will write all current changes to the transaction by creating a commit.
-func (sbt *SinglebranchTransaction) Write(ctx *TransactionContext) error {
+func (sbt *SinglebranchTransaction) Write(ctx *Context) error {
 
 	if ctx.credentials == nil {
 		return errors.New("need to define credentials in order to write to transaction")
@@ -48,7 +48,7 @@ func (sbt *SinglebranchTransaction) Write(ctx *TransactionContext) error {
 }
 
 // Commit will write commit the transaction by pushing to the defined repository.
-func (sbt *SinglebranchTransaction) Commit(ctx *TransactionContext) error {
+func (sbt *SinglebranchTransaction) Commit(ctx *Context) error {
 
 	err := push(ctx)
 	if err != nil {
@@ -62,7 +62,7 @@ func (sbt *SinglebranchTransaction) Commit(ctx *TransactionContext) error {
 
 // Rollback will reset to the state where the branch transaction started.
 // Rollback is called if an error happens during writing or commiting a transaction
-func (sbt *SinglebranchTransaction) Rollback(ctx *TransactionContext) error {
+func (sbt *SinglebranchTransaction) Rollback(ctx *Context) error {
 
 	err := reset(ctx.path, ctx.headBeforeTransaction)
 	if err != nil {
@@ -72,7 +72,7 @@ func (sbt *SinglebranchTransaction) Rollback(ctx *TransactionContext) error {
 	return nil
 }
 
-func push(ctx *TransactionContext) error {
+func push(ctx *Context) error {
 
 	repo, err := repository(ctx.path)
 	if err != nil {

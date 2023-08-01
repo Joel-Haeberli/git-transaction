@@ -34,20 +34,29 @@ type IdGenerationStrategy interface {
 
 // The Transaction interface defines the abstraction of a transaction
 type Transaction interface {
-	Write(*TransactionContext) error
-	Commit(*TransactionContext) error
-	Rollback(*TransactionContext) error
+	Write(*Context) error
+	Commit(*Context) error
+	Rollback(*Context) error
 }
 
 // The transaction context holds information about a transaction
-type TransactionContext struct {
+type Context struct {
 	Id                    string
 	path                  string
 	headBeforeTransaction plumbing.Hash
-	credentials           *TransactionCredentials
+	credentials           *credentials
 }
 
-type TransactionCredentials struct {
+// A token represents the properties of an acccess token which are needed
+// to allow its usage for
+type Token struct {
+	Username string
+	Token    string
+	Email    string
+}
+
+// credentials wrap the the token in git library manner
+type credentials struct {
 	object.Signature
 
 	accessToken string
@@ -89,19 +98,19 @@ func SetIdGenerationStrategy(strategy IdGenerationStrategy) {
 }
 
 // setup credentials for the given transaction
-func SetupCredentials(ctx *TransactionContext, username string, accessToken string, email string) {
+func SetupCredentials(ctx *Context, token *Token) {
 
-	creds := new(TransactionCredentials)
-	creds.Email = email
-	creds.Name = username
-	creds.accessToken = accessToken
+	creds := new(credentials)
+	creds.Email = token.Email
+	creds.Name = token.Username
+	creds.accessToken = token.Token
 
 	ctx.credentials = creds
 }
 
 // creates a new transaction in given mode and path (must be git repo)
 // returns a transaction context and the transaction or an error
-func New(m MODE, path string, tokenUsername string, token string, tokenEmail string) (*TransactionContext, Transaction, error) {
+func New(m MODE, path string, token *Token) (*Context, Transaction, error) {
 
 	for id := range ongoingTransactions {
 		if id == idGenerationStrategy.GenerateId(path) {
@@ -120,12 +129,12 @@ func New(m MODE, path string, tokenUsername string, token string, tokenEmail str
 	}
 
 	var transaction Transaction = new(SinglebranchTransaction)
-	ctx := new(TransactionContext)
+	ctx := new(Context)
 	ctx.path = path
 	ctx.Id = idGenerationStrategy.GenerateId(path)
 	ctx.headBeforeTransaction = ref.Hash()
 
-	SetupCredentials(ctx, tokenUsername, token, tokenEmail)
+	SetupCredentials(ctx, token)
 
 	addTransaction(ctx.Id, transaction)
 
@@ -133,7 +142,7 @@ func New(m MODE, path string, tokenUsername string, token string, tokenEmail str
 }
 
 // returns a transaction if matching id is found, otherwise nil
-func FindTransaction(ctx *TransactionContext) Transaction {
+func FindTransaction(ctx *Context) Transaction {
 
 	for id, trs := range ongoingTransactions {
 		if id == ctx.Id {
