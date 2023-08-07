@@ -69,6 +69,8 @@ func (sbt *SinglebranchTransaction) Rollback(ctx *Context) error {
 		return err
 	}
 
+	removeTransaction(ctx.Id)
+
 	return nil
 }
 

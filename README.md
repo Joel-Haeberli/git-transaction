@@ -34,7 +34,7 @@ of implementation can change or a goal can be omitted completely.
 1. Singlebranch Transaction
 2. Automatically detect writes (which calls write under the hood)
 3. Support repositories which require credentials and allow signing transactions (configure key and sign commits)
-4. Support ssh (not ony http)
+4. Support ssh (not only http)
 5. Multibranch Transaction
 6. Automatic conflict resolution (maybe some rule based resolution strategy which can be defined?)
 
@@ -57,3 +57,16 @@ which is not what we're looking for I think)
 
 You want to contribute? I'm grateful for every contribution wether it is an issue, bug or even
 a merge request. Please take a look at [CONTRIBUTING.md](./CONTRIBUTING.md) for further information.
+
+# a note on authentication
+
+When it comes to authenticating yourself or a service account, it gets a bit tricky. [Gitlab](https://gitlab.com) for example allows
+to create so called [Personal Access Tokens](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
+which work over [http basic auth](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication), whereas [Github](https://github.com)
+also allows using so called [Deploy Keys](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#deploy-keys)
+which are based on ssh. Currently only http basic auth is supported. One important difference is that if you are using Github with a personal access token,
+the token will allow access to all your repositories (global). On Gitlab the acces token is created on the repository (adds a new user to the project, local).
+
+Guides to create personal access tokens for...
+- [Gitlab](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
+- [Github](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
