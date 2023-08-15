@@ -18,6 +18,7 @@ type MODE int
 const (
 	SINGLEBRANCH MODE = 1 << iota
 	// MULTIBRANCH
+	DEBUG
 )
 
 // currently active transactions. In SINGLEBRANCH mode, only one transaction
@@ -111,6 +112,16 @@ func SetupCredentials(ctx *Context, token *Token) {
 // creates a new transaction in given mode and path (must be git repo)
 // returns a transaction context and the transaction or an error
 func New(m MODE, path string, token *Token) (*Context, Transaction, error) {
+
+	if m == DEBUG {
+
+		var debugTransaction Transaction = new(DebugTransaction)
+		ctx := new(Context)
+		ctx.Id = "DEBUG"
+		ctx.headBeforeTransaction = plumbing.Hash{}
+
+		return ctx, debugTransaction, nil
+	}
 
 	for id := range ongoingTransactions {
 		if id == idGenerationStrategy.GenerateId(path) {

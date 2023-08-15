@@ -22,7 +22,10 @@ be the simplest version of a transaction, which just writes to one single branch
 mode is sufficient, as long as only one single instance is working on the repository.
 
 The second mode (**Multibranch Transaction**) aims to enable multiple instance working
-on the same 
+on the same
+
+Additional there is a **Debug Transaction** mode. This mode does not write any transaction
+or similar and might be useful, during testing.
 
 # roadmap
 
